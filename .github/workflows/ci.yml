@@ -39,7 +39,7 @@ jobs:
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
     - name: Gradle build를 수행합니다.
-      run: ./gradlew clean build
+      run: ./gradlew clean build -Dspring.profiles.active=test
 
   dependency-submission:
 
