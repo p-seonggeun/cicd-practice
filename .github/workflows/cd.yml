@@ -40,4 +40,4 @@ jobs:
             cd /home/ubuntu/cicd-practice
             ./gradlew clean build -Dspring.profiles.active=prod
             sudo fuser -k -n tcp 8080 || true
-            nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
