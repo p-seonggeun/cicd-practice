@@ -22,6 +22,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: ${{ secrets.EC2_SSH_PORT }}
+          envs: APP_ENV
           script: |
             cd /home/ubuntu/cicd-practice
             rm -rf .env
