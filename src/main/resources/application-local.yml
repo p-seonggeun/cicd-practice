@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: file:.env[.yml]
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: ${H2_DATABASE_URL}
+    username: ${H2_DATABASE_USERNAME}
+    password: ${H2_DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create
