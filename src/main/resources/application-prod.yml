@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+    import: file:.env[.yml]
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_DATABASE_URL}
+    username: ${MYSQL_DATABASE_USERNAME}
+    password: ${MYSQL_DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update

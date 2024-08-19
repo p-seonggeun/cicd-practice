@@ -1,0 +1,35 @@
+name: CD
+
+on:
+  pull_request:
+    types: [closed]
+    branches: ["main"]
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: SSH로 EC2에 접속하기
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          APP_ENV: ${{ secrects.APP_ENV }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: APP_ENV
+          script_stop: true
+          script: |
+            cd /home/ubuntu/cicd-practice
+            rm -rf .env
+            git pull origin main
+            echo "$APP_ENV" > .env
+            ./gradlew clean build -Dspring.profiles.active=prod
+            sudo fuser -k -n tcp 8080 || true
+            java -jar build/libs/*SNAPSNOT.jar > ./output.log 2>&1 &
+            
+
