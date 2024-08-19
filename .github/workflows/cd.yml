@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: SSH로 EC2에 접속하기
+      - name: SSH로 EC2에 접속하여 환경 변수 설정 및 코드 업데이트
         uses: appleboy/ssh-action@master
         env:
           APP_ENV: ${{ secrets.APP_ENV }}
@@ -22,15 +22,20 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: ${{ secrets.EC2_SSH_PORT }}
-          envs: APP_ENV
-          script_stop: true
           script: |
             cd /home/ubuntu/cicd-practice
             rm -rf .env
             git pull origin main
             echo "$APP_ENV" > .env
+
+      - name: Gradle 빌드 및 애플리케이션 재시작
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          script: |
             ./gradlew clean build -Dspring.profiles.active=prod
             sudo fuser -k -n tcp 8080 || true
-            java -jar build/libs/*SNAPSNOT.jar > ./output.log 2>&1 &
-            
-
+            java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
