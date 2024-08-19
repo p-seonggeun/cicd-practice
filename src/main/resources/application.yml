@@ -1,5 +1,9 @@
 spring:
   profiles:
+    active: prod
+---
+spring:
+  profiles:
     group:
       logging: local, log
     active: logging
